@@ -1,0 +1,132 @@
+<%= form_for(@video_clip, :html => {:multipart => true}) do |f| %>
+  <% if @video_clip.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@video_clip.errors.count, "error") %> prohibited this video_clip from being saved:</h2>
+
+      <ul>
+      <% @video_clip.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label t('video_clip.title') %><br>
+    <%= f.text_field :title, :autocomplete => :off  %>
+  </div>
+  <div class="field">
+    <%= f.label t('video_clip.description') %><br>
+    <%= f.text_field :description, :autocomplete => :off  %>
+  </div>
+  <div class="field">
+    <% if f.object.new_record? || current_person.type == 'Admin' %>
+        <%= f.label t('availability') %><br>
+        <%= f.check_box :is_available %>
+    <% end %>
+  </div>
+  <div class="field">
+    <%= f.label t('date_label') %><br>
+    <%= f.date_select :date %>
+  </div>
+    <% if !(f.object.present?) %>
+        <div class="field">
+          <%= f.label t('video_clip.views') %><br>
+          <%= f.number_field :views %>
+        </div>
+    <% end %>
+
+  <div class="field">
+    <%= f.label t('video_clip.form.select_video_label') %>
+    <%= f.file_field :videoitemclip %><br>
+  </div>
+
+  <div class="field">
+    <%= f.label t('video_clip.form.select_video_remote_label') %><br>
+    <%= f.text_field :videoclip_from_url, :placeholder => t('video_clip.form.select_video_remote_placeholder'), :autocomplete => :off   %>
+  </div>
+
+  <div class="field">
+    <%= f.fields_for :thumbnails do |thumbnail| %>
+        <% if thumbnail.object.new_record? %>
+            <%= f.label t('video_clip.form.add_extra_thumb_label') %><br>
+            <%= thumbnail.file_field :image %><br>
+        <% end %>
+    <% end %>
+  </div>
+
+  <section id="wrap_retractable">
+      <% if !(f.object.new_record?) %>
+          <div class="field">
+            <h3 class="retractable"> <%= t('video_clip.form.thumbnails_label') %></h3>
+            <%= f.label t('video_clip.form.thumbnails_label') %><br>
+            <div class="assetsVideo">
+              <ul>
+                <%= f.fields_for :thumbnails do |thumbnail| %>
+                    <% unless thumbnail.object.new_record? %>
+                        <li>
+                          <%= link_to image_tag(thumbnail.object.image.url(:thumb)),
+                                      thumbnail.object.image.url(:original) %><br>
+                          <%= thumbnail.label t('action.destroy') %>
+                          <%= thumbnail.check_box :_destroy %><br>
+                        </li>
+                    <% end %>
+                <% end %>
+              </ul>
+            </div>
+            <br>
+            <%= f.label t('video_clip.form.represent_thumb_label') %><br>
+            <div class="assetsVideo">
+              <ul>
+                <%= f.fields_for :thumbnails do |thumbnail| %>
+                    <li>
+                      <% unless thumbnail.object.new_record? %>
+                          <%= link_to image_tag(thumbnail.object.image.url(:thumb)),
+                                      thumbnail.object.image.url(:original) %><br>
+                          <%= thumbnail.label t('video_clip.form.select_thumb_label') %>
+                          <%= radio_button_tag(:main_thumbnail, thumbnail.object.id, thumbnail_selected?(thumbnail.object)) %>
+                      <% end %>
+                    </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+
+          <% if current_person.type == 'Admin' %>
+            <div class="field">
+              <h3 class="retractable"> <%= t('comment.comments_label') %> </h3>
+              <div id="video_clips_comments_div">
+                <%= render :partial => 'video_clips_comments', :locals  =>  {:f =>  f }, :object => @video_clips_comments  %>
+              </div>
+            </div>
+          <% end %>
+      <% end %>
+  </section>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+
+<!--
+  <#% if f.object.new_record? %>
+    <div id="uploading">
+      <div id="progress" class="bar">
+        <div id="progressbar">&nbsp;</div>
+        <div id="percents"></div>
+      </div>
+    </div>
+  <%# end %>
+-->
+<% end %>
+
+<script>
+    $(function(){
+        $(".retractable").siblings().hide()
+        $(".retractable").click(function(){
+            var voisins = $(this).siblings();
+            voisins.slideToggle('slow');
+        });
+    });
+</script>
+
+

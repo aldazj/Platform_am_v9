@@ -1,0 +1,22 @@
+<div class="span8 offset3">
+  <% provide(:title, 'Reset Password') %>
+  <% if flash[:error] %>
+      <div id="error_explanation">
+        <ul>
+          <%= flash[:error] %>
+        </ul>
+      </div>
+  <% end %>
+    <h3>Reset Password</h3>
+    <%= form_tag password_resets_path, :method => :post do %>
+        <div class="field">
+          <%= label_tag :email %><br>
+          <%= text_field_tag :email, params[:email], :placeholder => "Enter your email..." %>
+        </div>
+        <div class="actions">
+          <%= submit_tag "Reset Password", class: 'btn btn-large btn-primary'  %>
+        </div>
+    <% end %>
+</div>
+
+

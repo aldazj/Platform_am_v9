@@ -1,0 +1,16 @@
+Dear <%= @person.lastname.upcase%> <%= @person.firstname %>,
+
+<% if !(@videosUrl.empty?) %>
+You are invited to watch videos:
+
+<% @videosUrl.each do |url| %>
+<%= url %>
+<% end %>
+<% end %>
+
+<% if !(@message.nil?) %>
+<%= @message %>
+<% end %>
+
+
+Best regards.

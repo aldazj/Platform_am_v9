@@ -1,0 +1,26 @@
+
+<table class="table table-bordered table-hover table-striped tablesorter">
+  <thead>
+  <tr>
+    <th><%= t('comment.message') %> </th>
+    <th><%= t('Owner') %> </th>
+    <th><%= t('created_at') %> </th>
+    <th><%= t('availability') %> </th>
+    <th><%= t('action.destroy') %> </th>
+  </tr>
+  </thead>
+  <tbody>
+      <%= f.fields_for(:comments, @video_clips_comments.reverse ) do |builder| %>
+          <tr>
+            <td><%= builder.text_area :message, :cols => 40,:readonly => true%></td>
+            <% owner = Person.find_by_id(builder.object.person_id) %>
+            <td><%= link_to owner.lastname.upcase+' '+owner.firstname, owner %></td>
+            <td><%= builder.object.created_at%></td>
+            <td><%= builder.check_box :is_available  %></td>
+            <td><%= builder.check_box :_destroy %></td>
+          </tr>
+      <% end %>
+  </tbody>
+</table>
+
+

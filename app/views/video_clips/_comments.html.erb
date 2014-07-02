@@ -1,0 +1,36 @@
+<div class="detailBox">
+  <div class="commentBox">
+    <p class="taskDescription"> <%= t('comment.comments_label') %></p>
+  </div>
+  <div class="actionBox">
+    <ul class="commentList">
+      <% if @video_clip.comments.size != 0 %>
+            <% @video_clip.comments.reverse.each  do |comment| %>
+                <% if comment.is_available? %>
+                  <li>
+                    <div class="commentImage">
+                      <%= image_tag 'user_profil.png' %>
+                    </div>
+                    <div class="commentBox">
+                        <div class="commentText">
+                          <p class=""> <%= comment.message %> </p> <span class="date sub-text"> <%= comment.created_at %>  </span>
+                        </div>
+                        <div class="commentOwner">
+                          <% if !(comment.person_id.nil?) %>
+                              <% owner = Person.find_by_id(comment.person_id)%>
+                              <%#= owner.lastname.upcase+' '+owner.firstname %>
+                              <%= link_to owner.lastname.upcase+' '+owner.firstname, owner %>
+                          <% end %>
+                        </div>
+                    </div>
+                  </li>
+                  <div class="espace"></div>
+                <% end %>
+            <% end %>
+      <% else %>
+          <%= t('comment.no_comments_label') %>
+      <% end %>
+    </ul>
+    <%#= will_paginate @video_clip_comments %>
+  </div>
+</div>
